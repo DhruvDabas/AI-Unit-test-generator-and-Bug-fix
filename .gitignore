@@ -1,0 +1,45 @@
+# node dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+# build output
+dist/
+build/
+
+#  files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# logs
+logs
+*.log
+logs/*.log
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+coverage/
+*.lcov
+
+# Temp files
+tmp/
+temp/
+.vscode/
+
+#  venv
+venv/
+ENV/
+env/
+.venv/
+
+# cache
+__pycache__/
+*.py[cod]
+*$py.class
+Thumbs.db
