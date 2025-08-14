@@ -1,6 +1,6 @@
 # AI-Powered Unit Test Generator & Bug Finder using Gradio, FAISS, and Frontier LLMs
 
-**CodeGuard AI** is an intelligent developer assistant that helps you **understand**, **debug**, and **improve** your codebase.  
+**Coder AI** is an intelligent developer assistant that helps you **understand**, **debug**, and **improve** your codebase.  
 It combines **code parsing**, **semantic search**, and **LLM reasoning** to answer questions, detect bugs, generate tests, and suggest refactors — all through an intuitive **Gradio web UI**.
 
 ---
