@@ -1,32 +1,24 @@
-# AI-Unit-test-generator-and-Bug-fix
+# AI-Powered Unit Test Generator & Bug Finder using Gradio, FAISS, and Frontier LLMs
 
-**Automated Unit Test Generator & Bug Finder using Express.js, FAISS, and Frontier LLMs**
-
-CodeGuard AI helps developers **understand, debug, and improve** their codebase.  
-It can:
-- Answer questions about any function/class in the repo
-- Find potential bugs using static analysis + AI reasoning
-- Generate unit tests for missing coverage
-- Suggest code refactors
+**Coder AI** is an intelligent developer assistant that helps you **understand**, **debug**, and **improve** your codebase.  
+It combines **code parsing**, **semantic search**, and **LLM reasoning** to answer questions, detect bugs, generate tests, and suggest refactors — all through an intuitive **Gradio web UI**.
 
 ---
 
-## 🚀 Features
-- **Repo Ingestion**: Parse source code into functions/classes and store embeddings in FAISS.
-- **AI Code Q&A**: Ask natural language questions about the code.
-- **Bug Detection**: Identify potential logic/security issues.
-- **Unit Test Generation**: Create PyTest/Jest test files automatically.
+##  Key Capabilities
+
+- **Natural Language Code Q&A** – Ask questions about any function, class, or module in your repo.
+- **Bug Detection & Analysis** – Identify logic errors and security vulnerabilities using static analysis + AI reasoning.
+- **Automated Unit Test Generation** – Create **PyTest** or **Jest** test files for untested code paths.
+- **Code Refactoring Suggestions** – Improve readability, maintainability, and performance.
 
 ---
 
-## 🏗 Tech Stack
-**Backend:**
-- Node.js + Express.js
-- LangChain.js (RAG orchestration)
-- FAISS (vector database)
-- Tree-sitter (code parsing)
-- OpenAI / HuggingFace APIs (embeddings + reasoning)
+##  How It Works
 
+1. **Repo Ingestion** – Parse source files into functions/classes using **Tree-sitter**.
+2. **Embedding & Indexing** – Store code embeddings in **FAISS** for fast semantic search.
+3. **RAG Pipeline** – Retrieve relevant code and feed it to a **frontier LLM** for analysis and generation.
+4. **Interactive UI** – Use the **Gradio interface** to upload repos, ask questions, and receive actionable insights.
 
-# Create .env file
-cp .env.example .env
+---
