@@ -1,0 +1,9 @@
+ollama
+openai
+gradio
+langchain
+langchain-openai
+langchain-chroma
+scikit-learn
+plotly
+ipython
