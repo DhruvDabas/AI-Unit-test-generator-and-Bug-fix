@@ -9,9 +9,8 @@ from langchain.document_loaders import DirectoryLoader, TextLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.schema import Document
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
-from langchain_chroma import Chroma
 import numpy as np
-from sklearn.manifold import TSNE
+from langchain.vectorstores import FAISS
 
 OLLAMA_API = "http://localhost:11434/api/chat"
 HEADERS = {"Content-Type": "application/json"}
@@ -52,11 +51,31 @@ embeddings = HuggingFaceEmbeddings(
 
 while(True):
     if os.path.exists(db_name):
-    Chroma(persist_directory=db_name, embedding_function=embeddings).delete_collection()
+    FAISS(persist_directory=db_name, embedding_function=embeddings).delete_collection()
 
-vectorstore = Chroma.from_documents(
-    documents=chunks,
-    embedding=embeddings,
-    persist_directory=db_name
-)
-print(f"Vectorstore created with {vectorstore._collection.count()} documents")
+vectorstore = FAISS.from_documents(chunks, embedding=embeddings)
+
+total_vectors = vectorstore.index.ntotal
+dimensions = vectorstore.index.d
+
+
+from langchain_community.chat_models import ChatOllama
+from langchain.chains import ConversationalRetrievalChain
+from langchain.memory import ConversationBufferMemory
+
+llm = ChatOllama(model="gemma3:4b", temperature=0.7)
+
+memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
+
+retriever = vectorstore.as_retriever()
+
+conversation_chain = ConversationalRetrievalChain.from_llm(llm=llm, retriever=retriever, memory=memory)
+
+memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
+
+
+conversation_chain = ConversationalRetrievalChain.from_llm(llm=llm, retriever=retriever, memory=memory)
+
+def chat_with_llm(message, history):
+    result = conversation_chain.invoke({"question": message})
+    return result["answer"]
