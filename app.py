@@ -3,7 +3,7 @@ import os
 import tempfile
 import shutil
 from test_case_generator import generate_test_cases
-from bug_finder import Bug_finder
+from bug_finder import find_bugs_in_code
 from chat import chat_with_llm
 
 def upload_repo(file):
@@ -39,7 +39,8 @@ def upload_repo(file):
 
 def find_bugs():
     try:
-        bug_report = Bug_finder("search-folder")
+        from bug_finder import find_bugs_in_code
+        bug_report = find_bugs_in_code()
         return bug_report
     except Exception as e:
         return f"❌ Error scanning for bugs: {str(e)}"
