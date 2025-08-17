@@ -5,7 +5,7 @@ from openai import OpenAI
 import gradio as gr
 
 OLLAMA_API = "http://localhost:11434/api/chat"
-MODEL = "qwen3:1.7b"
+MODEL = "gemma3:4b"
 
 ollama_via_openai = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
 
@@ -16,15 +16,7 @@ system_message = (
 )
 
 def generate_test_cases(code_input):
-    """
-    Generate test cases for the provided code using LLM.
-    
-    Args:
-        code_input (str): The code for which test cases need to be generated
-        
-    Returns:
-        str: Generated test cases
-    """
+
     if not code_input or not code_input.strip():
         return "Please provide code to generate test cases."
     
@@ -44,16 +36,7 @@ def generate_test_cases(code_input):
         return f"Error generating test cases: {str(e)}"
 
 def chat_test_generator(message, history):
-    """
-    Chat interface function for generating test cases.
-    
-    Args:
-        message (str): User's message containing code
-        history (list): Chat history
-        
-    Returns:
-        str: Generated test cases
-    """
+
     messages = [{"role": "system", "content": system_message}]
     for user_msg, bot_msg in history:
         messages.append({"role": "user", "content": user_msg})

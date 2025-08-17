@@ -30,24 +30,22 @@ class Bug:
         return f"{self.file_path}:{self.line_number}:{self.column} - {self.bug_type}: {self.description}"
 
 class BugFinder:
-    """Professional bug finder that scans Python code for common issues and applies fixes."""
     
     def __init__(self, search_folder: str = "search-folder"):
         self.search_folder = Path(search_folder)
         self.bugs: List[Bug] = []
-        self.fixes_applied: int = 0
         
     def scan_for_bugs(self) -> List[Bug]:
-        """Scan all Python files in the search folder for bugs."""
+        
         self.bugs = []
         
         if not self.search_folder.exists():
             logger.warning(f"Search folder {self.search_folder} does not exist")
             return self.bugs
             
-        python_files = list(self.search_folder.rglob("*.py"))
+        file_to_search = list(self.search_folder.rglob("*.py",".cpp"))
         
-        for file_path in python_files:
+        for file_path in file_to_search:
             try:
                 with open(file_path, 'r', encoding='utf-8') as f:
                     content = f.read()
@@ -173,7 +171,7 @@ class BugFinder:
         }
         
         try:
-            # Simple regex approach for variable/function names that match builtins
+            
             patterns = [
                 r'\bdef\s+(' + '|'.join(builtins) + r')\s*\(',
                 r'\b(' + '|'.join(builtins) + r')\s*=',
@@ -383,14 +381,13 @@ def scan_and_fix_bugs(search_folder: str = "search-folder") -> str:
     fixes_applied = bug_finder.fix_bugs()
     
     # Format code
-    python_files = list(Path(search_folder).rglob("*.py"))
-    for file_path in python_files:
+    file_to_search = list(Path(search_folder).rglob("*.py"))
+    for file_path in file_to_search:
         bug_finder.format_code(str(file_path))
     
     # Return bug report
     return bug_finder.get_bug_report()
 
 if __name__ == "__main__":
-    # Example usage
     report = scan_and_fix_bugs()
     print(report)

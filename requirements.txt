@@ -9,3 +9,6 @@ plotly
 ipython
 libcst
 autopep8
+sentence-transformers
+faiss-cpu
+langchain-community

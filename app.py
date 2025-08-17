@@ -4,12 +4,13 @@ import tempfile
 import shutil
 from test_case_generator import generate_test_cases
 from bug_finder import scan_and_fix_bugs
+from chat import chat_with_llm
 
 def upload_repo(file):
     if file is None:
         return "No file uploaded."
     
-    # Create search-folder if it doesn't exist
+    # make search-folder if it doesn't exist
     search_folder = "search-folder"
     if not os.path.exists(search_folder):
         os.makedirs(search_folder)
@@ -36,14 +37,8 @@ def upload_repo(file):
         except Exception as e:
             return f"❌ Error copying file: {str(e)}"
 
-def ask_codebase(question):
-    if not question.strip():
-        return "Please enter a question."
-    return f" User Question : '{question}'."
-
 def find_bugs():
     try:
-        # Scan for bugs and apply fixes
         bug_report = scan_and_fix_bugs("search-folder")
         return bug_report
     except Exception as e:
@@ -56,17 +51,25 @@ def generate_tests(code_input):
 with gr.Blocks() as app:
     gr.Markdown("# Code Q&A ")
     
-    with gr.Tab("📂 Upload Repo"):
-        repo_file = gr.File(label="Upload your code folder or file", file_count="multiple")
-        upload_btn = gr.Button("Upload & Process")
-        upload_output = gr.Textbox(label="Upload Status")
-        upload_btn.click(upload_repo, inputs=[repo_file], outputs=[upload_output])
     
     with gr.Tab("💬 Ask Questions"):
-        question_input = gr.Textbox(label="Ask about the codebase")
+        chatbot = gr.Chatbot(label="Chat History")
+        question_input = gr.Textbox(label="Ask about the codebase", placeholder="Type your question here...")
         ask_btn = gr.Button("Ask")
-        answer_output = gr.Textbox(label="Answer")
-        ask_btn.click(ask_codebase, inputs=[question_input], outputs=[answer_output])
+        clear_btn = gr.Button("Clear Chat")
+        
+        def respond(message, chat_history):
+            bot_message = chat_with_llm(message, chat_history)
+            chat_history.append((message, bot_message))
+            return "", chat_history
+        
+        ask_btn.click(respond, [question_input, chatbot], [question_input, chatbot])
+        question_input.submit(respond, [question_input, chatbot], [question_input, chatbot])
+        
+        def clear_chat():
+            return []
+        
+        clear_btn.click(clear_chat, None, chatbot)
     
     with gr.Tab("🐞 Find Bugs"):
         bug_btn = gr.Button("Scan for Bugs")

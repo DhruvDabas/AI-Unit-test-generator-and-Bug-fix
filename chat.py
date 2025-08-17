@@ -22,49 +22,57 @@ openai_client = OpenAI(base_url='http://localhost:11434/v1', api_key='ollama')
 def initialize_vector_store():
     """Initialize the vector store with documents from search-folder."""
     try:
-        folders = glob.glob("search-folder/*")
-        text_loader_kwargs = {'encoding': 'utf-8'}
-        documents = []
-
-        for folder in folders:
-            doc_type = os.path.basename(folder)
-            loader = DirectoryLoader(folder, glob="**/*.md", loader_cls=TextLoader, loader_kwargs=text_loader_kwargs)
-            folder_docs = loader.load()
-            for doc in folder_docs:
-                doc.metadata["doc_type"] = doc_type
-                documents.append(doc)
-
+        # Check if search-folder exists
+        if not os.path.exists("search-folder"):
+            print("search-folder does not exist")
+            return None
+            
+        # Load all text files from search-folder
+        loader = DirectoryLoader(
+            "search-folder", 
+            glob="**/*", 
+            loader_cls=TextLoader, 
+            loader_kwargs={'encoding': 'utf-8'},
+            show_progress=True,
+            use_multithreading=True
+        )
+        documents = loader.load()
+        
+        # Add metadata to documents
+        for i, doc in enumerate(documents):
+            doc.metadata["doc_id"] = i
+            
         if not documents:
             print("No documents found in search-folder")
             return None
 
+        print(f"Loaded {len(documents)} documents")
+        
+        # Split documents into chunks
         text_splitter = CharacterTextSplitter(chunk_size=1500, chunk_overlap=280)
         chunks = text_splitter.split_documents(documents)
+        
+        print(f"Split into {len(chunks)} chunks")
 
-        doc_types = set(chunk.metadata['doc_type'] for chunk in chunks)
-        print(f"Document types found: {', '.join(doc_types)}")
-
+        # Create embeddings
         embeddings = HuggingFaceEmbeddings(
             model_name="sentence-transformers/all-MiniLM-L6-v2"
         )
 
-        db_name = "vector_db"
-        if os.path.exists(db_name):
-            try:
-                FAISS(persist_directory=db_name, embedding_function=embeddings).delete_collection()
-            except:
-                pass  # Ignore errors in deleting old collection
-
+        # Create vectorstore
         vectorstore = FAISS.from_documents(chunks, embedding=embeddings)
         return vectorstore
     except Exception as e:
         print(f"Error initializing vector store: {str(e)}")
         return None
 
-# Initialize vector store
+
+
+
+
 vectorstore = initialize_vector_store()
 
-# Initialize conversation chain if vector store was created successfully
+# chat if convo chain is successful
 conversation_chain = None
 if vectorstore:
     try:
@@ -80,6 +88,8 @@ if vectorstore:
         print(f"Error initializing conversation chain: {str(e)}")
 
 def chat_with_llm(message, history):
+
+
     """
     Chat with the LLM using the vector store for context.
     
@@ -90,6 +100,8 @@ def chat_with_llm(message, history):
     Returns:
         str: LLM response
     """
+
+    
     if conversation_chain is None:
         return "Error: Conversation chain not initialized. Please check the setup."
     
