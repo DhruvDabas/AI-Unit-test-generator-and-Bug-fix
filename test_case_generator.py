@@ -5,7 +5,7 @@ from openai import OpenAI
 import gradio as gr
 
 OLLAMA_API = "http://localhost:11434/api/chat"
-MODEL = "gemma3:4b"
+MODEL = "deepseek-r1:7b"
 
 ollama_via_openai = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
 

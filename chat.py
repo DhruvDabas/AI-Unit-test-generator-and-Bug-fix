@@ -22,12 +22,12 @@ openai_client = OpenAI(base_url='http://localhost:11434/v1', api_key='ollama')
 def initialize_vector_store():
     """Initialize the vector store with documents from search-folder."""
     try:
-        # Check if search-folder exists
+        
         if not os.path.exists("search-folder"):
             print("search-folder does not exist")
             return None
             
-        # Load all text files from search-folder
+        
         loader = DirectoryLoader(
             "search-folder", 
             glob="**/*", 
@@ -38,7 +38,7 @@ def initialize_vector_store():
         )
         documents = loader.load()
         
-        # Add metadata to documents
+        
         for i, doc in enumerate(documents):
             doc.metadata["doc_id"] = i
             
@@ -90,18 +90,7 @@ if vectorstore:
 def chat_with_llm(message, history):
 
 
-    """
-    Chat with the LLM using the vector store for context.
-    
-    Args:
-        message (str): User's message
-        history (list): Chat history
-        
-    Returns:
-        str: LLM response
-    """
 
-    
     if conversation_chain is None:
         return "Error: Conversation chain not initialized. Please check the setup."
     
