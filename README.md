@@ -22,3 +22,11 @@ It combines **code parsing**, **semantic search**, and **LLM reasoning** to answ
 4. **Interactive UI** – Use the **Gradio interface** to upload repos, ask questions, and receive actionable insights.
 
 ---
+## 🛠 Installation & Setup
+
+### 1. Clone the Repository
+- pip install -r requirements.txt
+- ollama serve
+- ollama pull the model you want
+- python app.py
+
